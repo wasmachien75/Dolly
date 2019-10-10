@@ -1,7 +1,7 @@
-module Delivery.Tests
+module Delivery.Tests.Actions
 
 open NUnit.Framework
-open Delivery
+open Delivery.Actions
 open System.IO
 
 let testDir = @"C:\Temp\bla\"
@@ -31,7 +31,7 @@ let CopyAllFiles () =
         File.WriteAllText(testDir + str, str)
     ["a";"b";"c"] |> Seq.iter writeManyFiles
     let dir = Directory.CreateDirectory(Path.Combine(testDir, "copyFolder"))
-    Delivery.copyAllFiles testDir dir.FullName
+    copyAllFiles testDir dir.FullName
     Assert.IsNotEmpty(Directory.GetFiles(Path.Combine(testDir, "copyFolder")))
 
 [<TearDown>]

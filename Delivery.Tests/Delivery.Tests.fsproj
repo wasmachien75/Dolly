@@ -14,12 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="UnitTest1.fs" />
+    <Compile Include="ActionTests.fs" />
+    <Compile Include="SignatureTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Delivery\report-delivery.fsproj" />
+    <ProjectReference Include="..\Delivery\Delivery.fsproj" />
   </ItemGroup>
 
 </Project>

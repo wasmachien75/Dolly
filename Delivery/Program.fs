@@ -1,8 +1,5 @@
-﻿module Some
-
-open Delivery
+﻿open Delivery.Actions
 open System
-open System.Windows.Forms
 
 [<EntryPoint>]
 [<STAThread>]

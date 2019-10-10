@@ -1,4 +1,4 @@
-module Delivery
+module Delivery.Actions
 
 open System.IO
 open System.Windows.Forms
@@ -24,3 +24,4 @@ let copySingleFile (destinationDir: string) (from: string) =
 
 let copyAllFiles (fromDir: string) (destinationDir: string) = 
     Directory.GetFiles(fromDir) |> Seq.iter (copySingleFile destinationDir)
+
