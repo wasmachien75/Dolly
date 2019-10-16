@@ -15,7 +15,7 @@ let CopyFolder () =
     let from = @"C:\Users\willem.van.lishout\Documents\Repositories\reports\AETN\V29Q3\Continuity day\MX1 Playlist"
     let _to = testDir
     let dirInfo = copyFolderTo from _to
-    Assert.True(dirInfo.FullName = testDir + @"MX1 Playlist")
+    Assert.AreEqual(dirInfo, testDir + @"MX1 Playlist")
 
 [<Test>]
 let CopySingleFile () = 
@@ -33,6 +33,11 @@ let CopyAllFiles () =
     let dir = Directory.CreateDirectory(Path.Combine(testDir, "copyFolder"))
     copyAllFiles testDir dir.FullName
     Assert.IsNotEmpty(Directory.GetFiles(Path.Combine(testDir, "copyFolder")))
+
+[<Test>]
+let FindReportDef () = 
+    ["report def.xml"; "report.xsl"; "filename.xsl"] |> Seq.iter (fun f -> File.WriteAllText(testDir + f, ""))
+    Assert.AreEqual("report def.xml", findReportDefinitions testDir |> Path.GetFileName)
 
 [<TearDown>]
 let Teardown() = 

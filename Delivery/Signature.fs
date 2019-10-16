@@ -2,6 +2,7 @@
 
 open System.Diagnostics
 open System.Xml
+open System
 open System.Xml.Linq
 open System.Text.RegularExpressions
 
@@ -16,11 +17,14 @@ let getCurrentCommitHash (folder: string) =
     proc.Start() |> ignore
     proc.StandardOutput.ReadToEnd().Trim()
 
-
 let xmlFileEndsWithComment(file: XDocument) =
     let isComment (node: XNode) = node.GetType() = typeof<XComment>  
     file.LastNode |> isComment
 
+let createSignature folder = 
+    let hash = folder |> getCurrentCommitHash
+    let dateTime = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz")
+    [dateTime;" | SHA-1=";hash] |> String.concat ""
 
 let commentIsSignature(comment: XComment) = 
     //a comment should be <!--2019-02-01T23:02:12.222+02:00 | SHA-1=AD83D93B -->
@@ -30,3 +34,6 @@ let commentIsSignature(comment: XComment) =
 let documentWithSignature (signature: string) (doc: XDocument) = 
     let sigComment = new XComment(signature)
     new XDocument(doc.Root, sigComment)
+
+let getDocumentWithSignature (path: string) = 
+    path |> XDocument.Load |> documentWithSignature "bla"

@@ -1,4 +1,5 @@
 ﻿open Delivery.Actions
+open Delivery.Signature
 open System
 
 [<EntryPoint>]
@@ -6,6 +7,8 @@ open System
 let main argv =
     let from = chooseFolder "Select report folder"
     let _to = chooseFolder "Select destination folder"
-    let res = copyFolderTo from _to
-    printfn "%s" res.FullName
+    let reportDef = copyFolderTo from _to |> findReportDefinitions
+    let doc = getDocumentWithSignature reportDef
+    doc.Document.ToString() |> printf "%s"
+
     0
