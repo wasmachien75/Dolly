@@ -1,39 +1,34 @@
 ﻿module Delivery.Signature
 
 open System.Diagnostics
-open System.Xml
 open System
 open System.Xml.Linq
-open System.Text.RegularExpressions
 
+type Signature = {Timestamp: DateTime; Hash: string} with
+    member this.FullString = 
+        let dateTime = this.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz")
+        [dateTime;" | SHA-1=";this.Hash] |> String.concat ""
+
+///Gets the hash of the commit at HEAD in the source folder.
 let getCurrentCommitHash (folder: string) = 
-    let proc = new Process()
-    let info = new ProcessStartInfo()
+    let proc, info = new Process(), new ProcessStartInfo()
     info.RedirectStandardOutput <- true
+    info.RedirectStandardError <- true
     info.WorkingDirectory <- folder
     info.FileName <- "cmd.exe"
-    info.Arguments <- sprintf "/c git -C %s rev-parse HEAD" folder
+    info.Arguments <- "/c git rev-parse --short HEAD"
     proc.StartInfo <- info
     proc.Start() |> ignore
-    proc.StandardOutput.ReadToEnd().Trim()
+    proc.WaitForExit()
+    match proc.ExitCode with
+        | 0 -> proc.StandardOutput.ReadToEnd().Trim()
+        | _ -> failwithf "Failure when retrieving git hash. [%s]" (proc.StandardError.ReadToEnd())
+    
 
-let xmlFileEndsWithComment(file: XDocument) =
-    let isComment (node: XNode) = node.GetType() = typeof<XComment>  
-    file.LastNode |> isComment
+let createSignature folder = {Timestamp=DateTime.Now; Hash=folder |> getCurrentCommitHash}
 
-let createSignature folder = 
-    let hash = folder |> getCurrentCommitHash
-    let dateTime = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz")
-    [dateTime;" | SHA-1=";hash] |> String.concat ""
+///Appends a comment to the end of an XDocument.
+let addCommentToDocument (comment: string) (doc: XDocument) = new XDocument(doc.Root, new XComment(comment))
 
-let commentIsSignature(comment: XComment) = 
-    //a comment should be <!--2019-02-01T23:02:12.222+02:00 | SHA-1=AD83D93B -->
-    let regex = "[TZ0-9:+-\.]{29} \| SHA-1=[A-F0-9]{8}"
-    (comment.Value, regex) |> Regex.IsMatch
-
-let documentWithSignature (signature: string) (doc: XDocument) = 
-    let sigComment = new XComment(signature)
-    new XDocument(doc.Root, sigComment)
-
-let getDocumentWithSignature (path: string) = 
-    path |> XDocument.Load |> documentWithSignature "bla"
+///Appends a signature to the end of an XML file.
+let getDocumentWithSignature (path: string) (signature : Signature) = path |> XDocument.Load |> addCommentToDocument signature.FullString

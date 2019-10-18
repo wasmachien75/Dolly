@@ -6,8 +6,9 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Actions.fs" />
+    <Compile Include="Delivery.fs" />
     <Compile Include="Signature.fs" />
+    <Compile Include="Logger.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 </Project>
