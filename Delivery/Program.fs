@@ -15,6 +15,7 @@ let deliver from _to =
 [<EntryPoint>]
 [<STAThread>]
 let main argv =
+    logInfo ("Starting at " + DateTime.Now.ToShortTimeString())
     let from = chooseFolder "Select report folder"
     logInfo ("Source folder: " + from)
     let _to = chooseFolder "Select destination folder"
@@ -25,6 +26,9 @@ let main argv =
     with
        | _ as e -> 
        printfn "Error: %s" e.Message
-       printfn "I will now quit."
+       printfn "I will now quit. (Press F12 for stack trace)"
+       match Console.ReadKey().Key with
+        | ConsoleKey.F12 -> printfn "%s" e.StackTrace
+        | _ -> ()
     Console.ReadLine() |> ignore
     0

@@ -22,7 +22,7 @@ let getCurrentCommitHash (folder: string) =
     proc.WaitForExit()
     match proc.ExitCode with
         | 0 -> proc.StandardOutput.ReadToEnd().Trim()
-        | _ -> failwithf "Failure when retrieving git hash. [%s]" (proc.StandardError.ReadToEnd())
+        | _ -> failwithf "Failure when retrieving git hash. [%s]" (proc.StandardError.ReadToEnd().Trim())
     
 
 let createSignature folder = {Timestamp=DateTime.Now; Hash=folder |> getCurrentCommitHash}
