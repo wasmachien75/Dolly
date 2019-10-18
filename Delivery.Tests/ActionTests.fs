@@ -3,6 +3,7 @@ module Delivery.Tests.Actions
 open NUnit.Framework
 open Delivery.Actions
 open System.IO
+open System.Xml.Linq
 
 let testDir = @"C:\Temp\bla\"
 
@@ -38,6 +39,21 @@ let CopyAllFiles () =
 let FindReportDef () = 
     ["report def.xml"; "report.xsl"; "filename.xsl"] |> Seq.iter (fun f -> File.WriteAllText(testDir + f, ""))
     Assert.AreEqual("report def.xml", findReportDefinitions testDir |> Path.GetFileName)
+
+[<Test>]
+let WriteDocumentTest() = 
+    let fileName = testDir + "test.xml"
+    "<hi/>" |> XDocument.Parse |> writeDocument fileName
+    Assert.True(File.Exists(fileName))
+    let newDoc = File.ReadAllText(fileName) |> XDocument.Parse
+    Assert.AreEqual(newDoc.Document.Root.Name.ToString(), "hi")
+
+    //it should also work with an existing file.
+
+    "<bye/>" |> XDocument.Parse |> writeDocument fileName
+    Assert.True(File.Exists(fileName))
+    let newDoc = File.ReadAllText(fileName) |> XDocument.Parse
+    Assert.AreEqual(newDoc.Document.Root.Name.ToString(), "bye")
 
 [<TearDown>]
 let Teardown() = 
