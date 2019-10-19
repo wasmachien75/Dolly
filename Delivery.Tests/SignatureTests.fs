@@ -1,22 +1,23 @@
 ﻿module Delivery.Tests.Signature
 
-open NUnit.Framework
 open Delivery.Signature
 open System.Xml.Linq
-open System.Diagnostics
-open System.IO
+open Fuchu
 
-[<Test>]
-let TestHash () = 
-    Assert.AreEqual( @"C:\Users\willem.van.lishout\Documents\Repositories\report-delivery\Delivery.Tests" |> getCurrentCommitHash |> String.length, 7)
+let assertFalse msg value = Assert.Equal(msg, false, value)
+[<Tests>]
+let signatureTests =
+    testList "Signature tests" [ 
 
-[<Test>]
-let AddCommentToDocument() = 
-    let doc = "<greetings/>" |> XDocument.Parse |> addCommentToDocument "bla"
-    let lastComment = doc.LastNode :?> XComment
-    Assert.AreEqual(lastComment.Value, "bla")
+    testCase "Hash length" <| fun _ -> 
+        Assert.Equal("Hash length must be 7", @"C:\Users\willem.van.lishout\Documents\Repositories\report-delivery\Delivery.Tests" |> getCurrentCommitHash |> String.length, 7)
+    
+    testCase "Add comment to document" <| fun _ -> 
+        let doc = "<greetings/>" |> XDocument.Parse |> addCommentToDocument "bla"
+        let lastComment = doc.LastNode :?> XComment
+        Assert.Equal("The comment should be there", lastComment.Value, "bla")
 
-[<Test>]
-let TestSignature () = 
-   let sign =  @"C:\Users\willem.van.lishout\Documents\Repositories\report-delivery\Delivery.Tests" |> createSignature
-   sign.FullString.EndsWith("=") |> Assert.False
+    testCase "Create signature" <| fun _ -> 
+        let sign =  @"C:\Users\willem.van.lishout\Documents\Repositories\report-delivery\Delivery.Tests" |> createSignature
+        sign.FullString.EndsWith("=") |> assertFalse "The signature must be correct"
+]
