@@ -1,6 +1,6 @@
 ﻿open Delivery.Actions
 open Delivery.Signature
-open Delivery.Logger
+open Delivery.Logging
 open System
 
 let deliver from _to = 
@@ -14,7 +14,7 @@ let deliver from _to =
 
 [<EntryPoint>]
 [<STAThread>]
-let main argv =
+let rec main argv =
     logInfo ("Starting at " + DateTime.Now.ToShortTimeString())
     let from = chooseFolder "Select report folder"
     logInfo ("Source folder: " + from)
@@ -22,7 +22,12 @@ let main argv =
     logInfo ("Destination folder " + _to)
     try
         deliver from _to
-        logInfo "Delivery succeeded"
+        logInfo "Delivery succeeded. Press enter to deliver another report, or Ctrl + C to quit."
+        match Console.ReadKey().Key with
+         | ConsoleKey.Enter -> main argv |> ignore
+         | _ -> ()
+
+
     with
        | _ as e -> 
        printfn "Error: %s" e.Message

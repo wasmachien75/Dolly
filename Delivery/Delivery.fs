@@ -10,7 +10,6 @@ open System.Text.RegularExpressions
 let chooseFolder dialogTitle =
     let dialog = new FolderBrowserDialog()
     dialog.Description <- dialogTitle
-    dialog.RootFolder <- System.Environment.SpecialFolder.CommonDocuments
     dialog.ShowNewFolderButton <- false
     if dialog.ShowDialog() = DialogResult.OK then dialog.SelectedPath
     else exit (-1)
@@ -30,7 +29,7 @@ let copyFolderTo (folder: string) (destination: string) =
 
 let findReportDefinitions (folder: string) =
     let pattern = ".*(def|report).*\.xml"
-    let isReportDef (file : string) = Regex.IsMatch(file, pattern)
+    let isReportDef (file : string) = Regex.IsMatch(file, pattern, RegexOptions.IgnoreCase)
     try Directory.GetFiles(folder) |> Seq.find isReportDef
     with 
     | :? KeyNotFoundException -> failwithf "No report definition found. The report definition must match the pattern %s" pattern   

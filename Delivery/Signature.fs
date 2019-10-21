@@ -12,6 +12,7 @@ type Signature = {Timestamp: DateTime; Hash: string} with
 ///Gets the hash of the commit at HEAD in the source folder.
 let getCurrentCommitHash (folder: string) = 
     let proc, info = new Process(), new ProcessStartInfo()
+    info.UseShellExecute <- false
     info.RedirectStandardOutput <- true
     info.RedirectStandardError <- true
     info.WorkingDirectory <- folder

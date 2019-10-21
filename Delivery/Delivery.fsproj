@@ -2,8 +2,8 @@
   <PropertyGroup>
     <RootNamespace>report_delivery</RootNamespace>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFramework>net451</TargetFramework>
+	<UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Delivery.fs" />
