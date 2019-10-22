@@ -1,4 +1,4 @@
-﻿module Delivery.Tests.Main
+﻿module Dolly.Tests.Main
 open Fuchu
 
 [<EntryPoint>]

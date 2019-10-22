@@ -1,6 +1,6 @@
-﻿open Delivery.Actions
-open Delivery.Signature
-open Delivery.Logging
+﻿open Dolly.Actions
+open Dolly.Signature
+open Dolly.Logging
 open System
 
 let deliver from _to = 
@@ -14,9 +14,9 @@ let deliver from _to =
 
 [<EntryPoint>]
 [<STAThread>]
-let rec main argv =
+let rec main argv = //source folder can be argument
     logInfo ("Starting at " + DateTime.Now.ToShortTimeString())
-    let from = chooseFolder "Select report folder"
+    let from = if Array.isEmpty argv then chooseFolder "Select report folder" else Array.head argv 
     logInfo ("Source folder: " + from)
     let _to = chooseFolder "Select destination folder"
     logInfo ("Destination folder " + _to)

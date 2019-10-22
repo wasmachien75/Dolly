@@ -1,7 +1,7 @@
-module Delivery.Tests.Actions
+module Dolly.Tests.Actions
 
 open Fuchu
-open Delivery.Actions
+open Dolly.Actions
 open System.IO
 open System.Xml.Linq
 

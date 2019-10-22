@@ -1,4 +1,4 @@
-﻿module Delivery.Logging
+﻿module Dolly.Logging
 
 type LogLevel = Info | Warning | Debug
 

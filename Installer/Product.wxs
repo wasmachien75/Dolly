@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Dolly" Language="1033" Version="0.1.0.0" Manufacturer="Willem" UpgradeCode="63a9a2d7-0a8b-46da-8887-f15d1f82b266">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+    <Icon Id="icon.ico" SourceFile="$(var.Dolly.TargetDir)/dolly.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY"/>
+    <UI>
+      <UIRef Id="WixUI_InstallDir" />
+      <Publish Dialog="WelcomeDlg"
+            Control="Next"
+            Event="NewDialog"
+            Value="InstallDirDlg"
+            Order="2">1</Publish>
+      <Publish Dialog="InstallDirDlg"
+            Control="Back"
+            Event="NewDialog"
+            Value="WelcomeDlg"
+            Order="2">1</Publish>
+    </UI>
+    
+		<Feature Id="ProductFeature" Title="DeliveryInstaller" Level="1">
+      <ComponentRef Id="Dolly"/>
+      <ComponentRef Id="FSharpDll"/>
+      <ComponentRef Id="BetterFolderBrowser"/>
+      <ComponentRef Id="ValueTuple"/>
+      <ComponentRef Id="Registry"/>
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+        <Directory Id="Vendor" Name="MGX">
+          <Directory Id="APPLICATIONROOTDIRECTORY" Name="Dolly"/>
+        </Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+    <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
+      <Component Id="Dolly" Guid="9135BBD6-6ADC-43BF-A1AC-593D1FEF5419">
+        <File Source="$(var.Dolly.TargetPath)" Id="File1" KeyPath="yes"/>
+      </Component>
+      <Component Id="FSharpDll" Guid="D49DD87D-B2BD-4264-8C9A-48D4E3C69B81">
+        <File Source="$(var.Dolly.TargetDir)/FSharp.Core.Dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="BetterFolderBrowser" Guid="7DE9B5E2-1FE8-40F5-BD77-C4FF9B8D0286">
+        <File Source="$(var.Dolly.TargetDir)/BetterFolderBrowser.dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="ValueTuple" Guid="BAE1061B-0D6D-4116-B14C-0CE0B68C4415">
+        <File Source="$(var.Dolly.TargetDir)/System.ValueTuple.dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="Registry">
+        <RegistryKey Root="HKCR" Key="Directory\Background\shell\Dolly" Action="createAndRemoveOnUninstall">
+          <RegistryValue Value="Deliver with Dolly..." Type="string"/>
+          <RegistryKey Key="command">
+            <RegistryValue Value="[APPLICATIONROOTDIRECTORY]Dolly.exe &quot;%V&quot;" Type="string"/>
+          </RegistryKey>
+        </RegistryKey>
+      </Component>
+    </DirectoryRef>
+	</Fragment>
+</Wix>

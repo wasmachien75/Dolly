@@ -1,4 +1,4 @@
-﻿module Delivery.Signature
+﻿module Dolly.Signature
 
 open System.Diagnostics
 open System
@@ -9,7 +9,7 @@ type Signature = {Timestamp: DateTime; Hash: string} with
         let dateTime = this.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz")
         [dateTime;" | SHA-1=";this.Hash] |> String.concat ""
 
-///Gets the hash of the commit at HEAD in the source folder.
+///Gets the hash of the commit at HEAD in a folder.
 let getCurrentCommitHash (folder: string) = 
     let proc, info = new Process(), new ProcessStartInfo()
     info.UseShellExecute <- false

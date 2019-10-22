@@ -1,4 +1,4 @@
-﻿module Delivery.Actions
+﻿module Dolly.Actions
 
 open System.IO
 open System.Windows.Forms
@@ -6,13 +6,16 @@ open System.Xml.Linq
 open System.Xml
 open System.Collections.Generic
 open System.Text.RegularExpressions
+open WK.Libraries.BetterFolderBrowserNS
 
-let chooseFolder dialogTitle =
-    let dialog = new FolderBrowserDialog()
-    dialog.Description <- dialogTitle
-    dialog.ShowNewFolderButton <- false
-    if dialog.ShowDialog() = DialogResult.OK then dialog.SelectedPath
-    else exit (-1)
+let chooseFolderWithRootFolder dialogTitle rootFolder =
+    let d = new BetterFolderBrowser()
+    d.RootFolder <- rootFolder
+    d.Title <- dialogTitle
+    if d.ShowDialog() = DialogResult.OK then d.SelectedFolder
+    else exit -1
+
+let chooseFolder dialogTitle = chooseFolderWithRootFolder dialogTitle ""
     
 let copySingleFile (destinationDir: string) (from: string) =
     let destination = Path.Combine(destinationDir, Path.GetFileName(from))

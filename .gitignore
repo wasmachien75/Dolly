@@ -11,6 +11,9 @@ bin
 .ionide
 .paket
 packages
+*.exe
+*.ico
+rh.ini
 
 
 
