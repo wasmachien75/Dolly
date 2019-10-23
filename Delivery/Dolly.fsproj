@@ -8,13 +8,20 @@
 	<RunPostBuildEvent>1</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Delivery.fs" />
+    <None Include="config.xml" />
+    <Compile Include="Delivery.fs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Signature.fs" />
     <Compile Include="Logger.fs" />
+    <Compile Include="Config.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BetterFolderBrowser" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="$(ProjectDir)rh.exe -open $(TargetPath) -save $(TargetPath) -action addskip -res $(ProjectDir)dolly.ico -mask ICONGROUP,MAINICON," />

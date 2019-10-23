@@ -32,7 +32,7 @@
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
+			<Directory Id="AppDataFolder">
         <Directory Id="Vendor" Name="MGX">
           <Directory Id="APPLICATIONROOTDIRECTORY" Name="Dolly"/>
         </Directory>
