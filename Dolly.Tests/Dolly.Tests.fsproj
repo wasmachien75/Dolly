@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Delivery\Dolly.fsproj" />
+    <ProjectReference Include="..\Dolly\Dolly.fsproj" />
   </ItemGroup>
 
 </Project>
