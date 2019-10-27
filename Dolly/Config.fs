@@ -12,7 +12,9 @@ let parseConfig (file: string) : Config =
         if Seq.isEmpty descendants then "" else descendants.First().Value
     let doc = file |> XDocument.Load
     let getValue = getValueForElementInDoc doc
-    {RootFolder = "rootFolder" |> getValue; TargetFolder = "targetFolder" |> getValue}
+    {RootFolder = "root-folder" |> getValue; TargetFolder = "target-folder" |> getValue}
 
 let tryGetConfig configFile : Option<Config> = 
     if File.Exists (configFile) then parseConfig configFile |> Some else None
+
+let Configuration = tryGetConfig "config.xml"

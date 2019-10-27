@@ -1,4 +1,4 @@
-﻿module ConfigTests
+﻿module Dolly.Tests.Config
 
 open Fuchu
 open Dolly.Config

@@ -1,5 +1,7 @@
 ﻿module Dolly.Actions
 
+open Dolly.FolderMapping
+open Dolly.Logging
 open System.IO
 open System.Windows.Forms
 open System.Xml.Linq
@@ -7,6 +9,19 @@ open System.Xml
 open System.Collections.Generic
 open System.Text.RegularExpressions
 open WK.Libraries.BetterFolderBrowserNS
+
+let targetFolder, sourceFolder = 
+    match Dolly.Config.Configuration with
+    | Some x -> (x.TargetFolder, x.RootFolder)
+    | _ -> ("", "")
+
+let warnAndReturn folder = 
+    match MessageBox.Show("The selected folder is not a dataroot folder. You might not have the latest version. Do you want to continue?", "", MessageBoxButtons.YesNo) with
+     | DialogResult.Yes -> folder
+     | _ -> exit(-1)
+
+let possiblyWarn (folder: string) = 
+    if folder.Contains("dataroot") then folder else warnAndReturn folder
 
 let chooseFolderWithRootFolder dialogTitle rootFolder =
     let d = new BetterFolderBrowser()
@@ -16,9 +31,18 @@ let chooseFolderWithRootFolder dialogTitle rootFolder =
     else exit -1
 
 let chooseFolder dialogTitle = chooseFolderWithRootFolder dialogTitle ""
-    
+
+let chooseSourceFolder = chooseFolderWithRootFolder "Select source report folder" sourceFolder |> possiblyWarn
+
+let chooseTargetFolder (maybeCustomer: FolderMapping option) = 
+    match maybeCustomer with
+    | Some x -> Path.Combine(targetFolder, x.FtpFolderName)
+    | None -> ""
+    |> chooseFolderWithRootFolder "Select target folder"
+
 let copySingleFile (destinationDir: string) (from: string) =
     let destination = Path.Combine(destinationDir, Path.GetFileName(from))
+    sprintf "Copying %s to %s" from destination |> logDebug
     File.Copy(from, destination, true)
 
 let copyAllFiles (fromDir: string) (destinationDir: string) = 

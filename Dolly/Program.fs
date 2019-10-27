@@ -1,7 +1,8 @@
 ﻿open Dolly.Actions
 open Dolly.Signature
 open Dolly.Logging
-open Dolly.Config
+open Dolly.FolderMapping
+open Dolly.Mailer
 open System
 
 let deliver from _to = 
@@ -12,33 +13,36 @@ let deliver from _to =
     let docWithSignature = getDocumentWithSignature reportDef signature
     logInfo "Appending signature..."
     writeDocument reportDef docWithSignature
+    logInfo "Sending confirmation mail..."
+    SendMail from _to
 
 let openInExplorerAndQuit (folder : string) = 
     System.Diagnostics.Process.Start (folder) |> ignore
     exit(0)
 
+let listenForKeyPress (key: ConsoleKey) fn = 
+    if Console.ReadKey().Key = key then fn () else ()
+
 [<EntryPoint>]
 [<STAThread>]
 let rec main argv = //source folder can be argument
+    let customerMapping = readFolderMappingFromFile "mapping.xml"
     logInfo <| "Starting at " + DateTime.Now.ToShortTimeString()
-    let from = if Array.isEmpty argv then chooseFolder "Select report folder" else Array.head argv 
+
+    let from = 
+        match Array.tryHead argv with
+            | Some x -> x
+            | None -> chooseSourceFolder
     logInfo <| "Source folder: " + from
-    let _to = chooseFolder "Select destination folder"
+    let _to = chooseTargetFolder <| customerFromPath customerMapping from
     logInfo <| "Destination folder " + _to
     try
         deliver from _to
-        logInfo "Delivery succeeded. Press enter to deliver another report, F12 to open the target folder, or Ctrl + C to quit."
-        match Console.ReadKey().Key with
-         | ConsoleKey.Enter -> main [||] |> ignore
-         | ConsoleKey.F12 -> openInExplorerAndQuit _to
-         | _ -> ()
-
+        logInfo "Delivery succeeded. Press F12 to open the target folder, or Ctrl + C to quit."
+        listenForKeyPress ConsoleKey.F12 <| (fun _ -> openInExplorerAndQuit _to)
     with
        | _ as e -> 
-       printfn "Error: %s" e.Message
-       printfn "I will now quit. (Press F12 for stack trace)"
-       match Console.ReadKey().Key with
-        | ConsoleKey.F12 -> printfn "%s" e.StackTrace
-        | _ -> ()
+       printfn "Error: %s.\nI will now quit. (Press F12 for stack trace)" e.Message
+       listenForKeyPress ConsoleKey.F12 (fun _ -> printfn "%s" e.StackTrace) 
     Console.ReadLine() |> ignore
     0

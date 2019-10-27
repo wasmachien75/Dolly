@@ -9,13 +9,25 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="config.xml" />
+    <Compile Include="Mailer.fs" />
+    <Compile Include="Logger.fs" />
+    <Compile Include="FolderMapping.fs" />
+    <Compile Include="Config.fs" />
     <Compile Include="Delivery.fs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Signature.fs" />
-    <Compile Include="Logger.fs" />
-    <Compile Include="Config.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Outlook.dll">
+      <Guid>00062fff-0000-0000-c000-000000000046</Guid>
+      <VersionMajor>9</VersionMajor>
+      <VersionMinor>6</VersionMinor>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BetterFolderBrowser" Version="1.0.0" />
