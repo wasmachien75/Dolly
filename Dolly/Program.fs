@@ -7,14 +7,15 @@ open System
 
 let deliver from _to = 
     let signature = createSignature from
-    logInfo <| "Generated signature: " + signature.FullString
+    getCommitLog from |> logInfo
+    "Generated signature: " + signature.FullString |> logInfo
     let reportDef = copyFolderTo from _to |> findReportDefinitions
-    logInfo <| "Found report definition at: " + reportDef
+    "Found report definition at: " + reportDef |> logInfo
     let docWithSignature = getDocumentWithSignature reportDef signature
     logInfo "Appending signature..."
     writeDocument reportDef docWithSignature
     logInfo "Sending confirmation mail..."
-    SendMail from _to
+    sendMail from _to
 
 let openInExplorerAndQuit (folder : string) = 
     System.Diagnostics.Process.Start (folder) |> ignore
@@ -33,6 +34,7 @@ let rec main argv = //source folder can be argument
         match Array.tryHead argv with
             | Some x -> x
             | None -> chooseSourceFolder
+
     logInfo <| "Source folder: " + from
     let _to = chooseTargetFolder <| customerFromPath customerMapping from
     logInfo <| "Destination folder " + _to
