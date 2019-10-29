@@ -8,7 +8,7 @@ let writeXml fn () =
     let writer = XmlWriter.Create("config.xml")
     writer.WriteStartElement("dolly")
     writer.WriteStartElement("config")
-    writer.WriteStartElement("rootFolder")
+    writer.WriteStartElement("dataroot-folder")
     writer.WriteRaw(@"c:\temp\reports")
     writer.WriteEndDocument()
     writer.Close()
