@@ -15,14 +15,6 @@ let targetFolder, sourceFolder =
     | Some x -> (x.TargetFolder, x.RootFolder)
     | _ -> ("", "")
 
-let warnAndReturn folder = 
-    match MessageBox.Show("The selected folder is not a dataroot folder. You might not have the latest version. Do you want to continue?", "", MessageBoxButtons.YesNo) with
-     | DialogResult.Yes -> folder
-     | _ -> exit(-1)
-
-let possiblyWarn (folder: string) = 
-    if folder.Contains("dataroot") then folder else warnAndReturn folder
-
 let chooseFolderWithRootFolder dialogTitle rootFolder =
     let d = new BetterFolderBrowser()
     d.RootFolder <- rootFolder
@@ -32,7 +24,7 @@ let chooseFolderWithRootFolder dialogTitle rootFolder =
 
 let chooseFolder dialogTitle = chooseFolderWithRootFolder dialogTitle ""
 
-let chooseSourceFolder = chooseFolderWithRootFolder "Select source report folder" sourceFolder |> possiblyWarn
+let chooseSourceFolder = chooseFolderWithRootFolder "Select source report folder" sourceFolder
 
 let chooseTargetFolder (maybeCustomer: FolderMapping option) = 
     match maybeCustomer with

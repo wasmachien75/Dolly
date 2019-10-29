@@ -8,7 +8,7 @@ open System.IO
 let tail (folder: string) = 
     folder.Split(Path.DirectorySeparatorChar) |> Seq.last
 
-let SendMail sourceFolder targetFolder = 
+let sendMail sourceFolder targetFolder = 
     let client = new SmtpClient()
     client.Host <- "localhost"
     client.Port <- 25
