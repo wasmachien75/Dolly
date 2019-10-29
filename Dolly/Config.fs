@@ -34,7 +34,7 @@ let parseConfig (file: string) : Config =
     let rootFolder = rootFolderTagName |> getValue
     let targetFolder = targetFolderTagName |> getValue
     let logLevel = getLogLevel doc
-    {RootFolder = rootFolderTagName |> getValue; TargetFolder = targetFolderTagName |> getValue; LogLevel = Enum.Parse(typeof<LogLevel>, logLevel |> getValue) :?> LogLevel}
+    {RootFolder = rootFolder; TargetFolder = targetFolder; LogLevel = logLevel}
 
 let tryGetConfig configFile : Option<Config> = 
     if File.Exists (configFile) then parseConfig configFile |> Some else None
