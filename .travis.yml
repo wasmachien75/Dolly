@@ -1,0 +1,5 @@
+language: csharp
+dotnet: 3.0.100
+script:
+  - dotnet build
+  - dotnet run --project .\Dolly.Tests\Dolly.Tests.fsproj
