@@ -29,7 +29,7 @@ let getShellOutput (input: string) (workingDir: string) =
         | _ -> failwithf "Failure when retrieving shell output for command '%s' -> %s" (stderr.Trim()) <| input
 
 let getCommitLog (folder: string) = 
-    getShellOutput "git log --format=format:\"Last commit: %an - %aI - %s\" -n 1" folder
+    getShellOutput "git log --format=format:\"Last commit: %an - %aI - %s\" -n 1 ." folder
 
 let getLastHashAndTimestamp (folder: string) = 
     let output = (getShellOutput "git log --format=format:\"%h %aI\" -n 1 ." folder).Split(' ')

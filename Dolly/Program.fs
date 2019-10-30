@@ -2,11 +2,16 @@
 open Dolly.Signature
 open Dolly.Logging
 open Dolly.FolderMapping
-open Dolly.Mailer
+open Dolly.Push
 open System
 
-let deliver from _to = 
+let getReportName (folder: string) = 
+    folder.Split(System.IO.Path.DirectorySeparatorChar) |> Seq.last
+
+let deliver from _to =
+    let reportName = getReportName from
     let signature = createSignature from
+    sprintf "Cloning report '%s'" reportName |> logInfo
     getCommitLog from |> logInfo
     "Generated signature: " + signature.FullString |> logInfo
     let reportDef = copyFolderTo from _to |> findReportDefinitions
@@ -14,8 +19,10 @@ let deliver from _to =
     let docWithSignature = getDocumentWithSignature reportDef signature
     logInfo "Appending signature..."
     writeDocument reportDef docWithSignature
-    logInfo "Sending confirmation mail..."
-    sendMail from _to
+    let res = createMessage "Report delivery" reportName signature.LastGitHash |> pushMessageAsync
+    match res.Result.StatusCode |> int with
+    | 200 -> "Sent acknowledgement to Teams" |> logInfo
+    | i -> (sprintf "Could not send message to Teams (status code %d)" i) |> logInfo
 
 let openInExplorerAndQuit (folder : string) = 
     System.Diagnostics.Process.Start (folder) |> ignore
