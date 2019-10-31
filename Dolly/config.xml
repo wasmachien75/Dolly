@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <dolly>
   <settings>
-    <rootFolder></rootFolder>
-    <targetFolder></targetFolder>
+    <dataroot-folder></dataroot-folder>
+    <target-folder></target-folder>
+	<log-level>Info</log-level>
   </settings>
 </dolly>
