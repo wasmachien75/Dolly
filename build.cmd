@@ -1,9 +1,4 @@
 @echo off
-cls
+"./Dolly.Tests/bin/Debug/net451/Dolly.Tests.exe"
 
-.paket\paket.exe restore
-if errorlevel 1 (
-  exit /b %errorlevel%
-)
-
-packages\build\FAKE\tools\FAKE.exe build.fsx %*
+if errorlevel==0 (cmd /c "dotnet build")
