@@ -10,6 +10,7 @@ let testFolder = "testDir"
 [<SetUp>]
 let writeGit () =
     Directory.CreateDirectory(testFolder) |> ignore
+    getShellOutput "git config user.name nobody && git config user.email nobody@google.com" testFolder |> ignore
     getShellOutput "git init && echo \"blabla\" > test.test && git add * && git commit -m \"test\" " testFolder |> ignore
 
 [<TearDown>]
