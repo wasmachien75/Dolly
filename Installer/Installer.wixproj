@@ -29,7 +29,7 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Delivery\Dolly.fsproj">
+    <ProjectReference Include="..\Dolly\Dolly.fsproj">
       <Name>Dolly</Name>
       <Project>{865c3157-55fa-48b2-aad5-f9bd6e73e302}</Project>
       <Private>True</Private>

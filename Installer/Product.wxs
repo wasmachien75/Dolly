@@ -26,13 +26,15 @@
       <ComponentRef Id="FSharpDll"/>
       <ComponentRef Id="BetterFolderBrowser"/>
       <ComponentRef Id="ValueTuple"/>
+      <ComponentRef Id="NewtonsoftJson"/>
+      <ComponentRef Id="configXml"/>
       <ComponentRef Id="Registry"/>
 		</Feature>
 	</Product>
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="AppDataFolder">
+			<Directory Id="ProgramFilesFolder">
         <Directory Id="Vendor" Name="MGX">
           <Directory Id="APPLICATIONROOTDIRECTORY" Name="Dolly"/>
         </Directory>
@@ -53,6 +55,12 @@
       </Component>
       <Component Id="ValueTuple" Guid="BAE1061B-0D6D-4116-B14C-0CE0B68C4415">
         <File Source="$(var.Dolly.TargetDir)/System.ValueTuple.dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="NewtonsoftJson" Guid="CED6EA5E-ABF2-4AB1-809A-848F70FA90E8">
+        <File Source="$(var.Dolly.TargetDir)/Newtonsoft.Json.dll" KeyPath="yes"/>
+      </Component>
+      <Component Id="configXml" Guid="B59819DF-842E-4082-A0BB-F2330D0BC9CC">
+        <File Source="$(var.Dolly.ProjectDir)/config.xml" KeyPath="yes"/>
       </Component>
       <Component Id="Registry">
         <RegistryKey Root="HKCR" Key="Directory\Background\shell\Dolly" Action="createAndRemoveOnUninstall">

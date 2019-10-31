@@ -3,6 +3,6 @@
   <settings>
     <dataroot-folder></dataroot-folder>
     <target-folder></target-folder>
-	<log-level>Info</log-level>
+	<log-level></log-level>
   </settings>
 </dolly>
