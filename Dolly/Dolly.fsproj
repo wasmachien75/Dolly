@@ -20,16 +20,6 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="Microsoft.Office.Outlook.dll">
-      <Guid>00062fff-0000-0000-c000-000000000046</Guid>
-      <VersionMajor>9</VersionMajor>
-      <VersionMinor>6</VersionMinor>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="BetterFolderBrowser" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
