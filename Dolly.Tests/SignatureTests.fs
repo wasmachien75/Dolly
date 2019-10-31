@@ -2,33 +2,49 @@
 
 open Dolly.Signature
 open System.Xml.Linq
-open Fuchu
+open System.IO
+open NUnit.Framework
 
-let assertFalse msg value = Assert.Equal(msg, false, value)
-let assertTrue msg value = Assert.Equal(msg, true, value)
-[<Tests>]
-let signatureTests =
-    //To do: fix hardcoded directories
-    testList "Signature tests" [ 
+let testFolder = "testDir" 
 
-    testCase "Hash length" <| fun _ -> 
-        Assert.Equal("Hash length must be 7", @"C:\Users\willem.van.lishout\Documents\Repositories\Dolly\Dolly.Tests" |> getCurrentCommitHash |> String.length, 7)
-    
-    testCase "Add comment to document" <| fun _ -> 
-        let doc = "<greetings/>" |> XDocument.Parse |> addCommentToDocument "bla"
-        let lastComment = doc.LastNode :?> XComment
-        Assert.Equal("The comment should be there", lastComment.Value, "bla")
+[<SetUp>]
+let writeGit () =
+    Directory.CreateDirectory(testFolder) |> ignore
+    getShellOutput "git init && echo \"blabla\" > test.test && git add * && git commit -m \"test\" " testFolder |> ignore
 
-    testCase "Create signature" <| fun _ -> 
-        let sign =  @"C:\Users\willem.van.lishout\Documents\Repositories\Dolly\Dolly.Tests" |> createSignature
-        sign.FullString.EndsWith("=") |> assertFalse "The signature must be correct"
+[<TearDown>]
+let delete () = //git objects are marked read-only and can therefore not be simply deleted
+    let rec recursivelyRemoveReadOnlyAndDelete folder = 
+        let dir = new DirectoryInfo(folder)
+        dir.GetFiles() |> Seq.iter (fun f -> 
+            f.Attributes <- FileAttributes.Normal
+            f.Delete()
+        )
+        dir.GetDirectories() |> Seq.iter 
+            (fun subDir -> recursivelyRemoveReadOnlyAndDelete subDir.FullName)
+        dir.Delete(true)
+    recursivelyRemoveReadOnlyAndDelete testFolder
 
-    testCase "Test signature content" <| fun _ ->
-        let now = System.DateTime.Now
-        let nowPlus1Hour = now.AddHours(1.0)
-        let signature = {Hash="abc";LastGitHash="def";Timestamp=now;GitTimestamp=nowPlus1Hour}
-        let str = signature.FullString
-        (str.Contains("abc") && str.Contains("def") && str.Contains(now.ToString("yyyy-MM-dd")) && str.Contains(nowPlus1Hour.ToString("yyyy-MM-dd")))
-        |> assertTrue "The signature string should contain all members"
-        
-        ]
+[<Test>]
+let HashTest () = 
+    Assert.AreEqual(7, testFolder |> getCurrentCommitHash |> String.length)
+
+[<Test>]
+let CreateSignatureTest () = 
+    let sign =  testFolder |> createSignature
+    sign.FullString.EndsWith("=") |> Assert.False
+
+[<Test>]
+let SignatureContentTest () = 
+    let now = System.DateTime.Now
+    let nowPlus1Hour = now.AddHours(1.0)
+    let signature = {Hash="abc";LastGitHash="def";Timestamp=now;GitTimestamp=nowPlus1Hour}
+    let str = signature.FullString
+    (str.Contains("abc") && str.Contains("def") && str.Contains(now.ToString("yyyy-MM-dd")) && str.Contains(nowPlus1Hour.ToString("yyyy-MM-dd")))
+    |> Assert.True
+
+[<Test>]
+let AddCommentTest () =
+    let doc = "<greetings/>" |> XDocument.Parse |> addCommentToDocument "bla"
+    let lastComment = doc.LastNode :?> XComment
+    Assert.AreEqual(lastComment.Value, "bla")

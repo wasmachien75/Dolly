@@ -26,7 +26,7 @@ let getShellOutput (input: string) (workingDir: string) =
     proc.Close()
     match exitCode with
         | 0 -> stdout.Trim()
-        | _ -> failwithf "Failure when retrieving shell output for command '%s' -> %s" (stderr.Trim()) <| input
+        | _ -> failwithf "Failure when retrieving shell output for command '%s' -> %s" input (stderr.Trim())
 
 let getCommitLog (folder: string) = 
     getShellOutput "git log --format=format:\"Last commit: %an - %aI - %s\" -n 1 ." folder
