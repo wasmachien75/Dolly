@@ -397,3 +397,4 @@ paket-files/
 .idea/
 *.sln.iml
 /config.xml
+/Dolly.Tests/coverage

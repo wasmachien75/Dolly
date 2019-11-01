@@ -5,8 +5,13 @@ open Dolly.FolderMapping
 open Dolly.Push
 open System
 
+let endpointTeams = "https://outlook.office.com/webhook/fad37f7c-a3e6-42d9-b77e-8556115b6dab@00f6d248-8400-431b-b006-63cc85dc46c2/IncomingWebhook/c625d98de23940dd8a604cb13152a167/acc01fe7-e32a-49f5-908d-cbb95bc155e6"
+let pushMessageAsync msg = pushMessageAsyncWithEndPoint msg endpointTeams
+
+
 let getReportName (folder: string) = 
     folder.Split(System.IO.Path.DirectorySeparatorChar) |> Seq.last
+
 
 let deliver from _to =
     let reportName = getReportName from
@@ -19,7 +24,7 @@ let deliver from _to =
     let docWithSignature = getDocumentWithSignature reportDef signature
     logInfo "Appending signature..."
     writeDocument reportDef docWithSignature
-    let res = createMessage "Report delivery" reportName signature.LastGitHash |> pushMessageAsync
+    let res = createMessage "Report delivery" reportName signature.LastGitHash |> pushMessageAsync 
     match res.Result.StatusCode |> int with
     | 200 -> "Sent acknowledgement to Teams" |> logInfo
     | i -> (sprintf "Could not send message to Teams (status code %d)" i) |> logInfo
