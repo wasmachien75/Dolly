@@ -29,5 +29,6 @@ steps:
 
 - task: VSTest@2
   inputs:
+    codeCoverageEnabled: true
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
