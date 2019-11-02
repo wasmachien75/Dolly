@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--yes, learning WiX is like trying to figure out the obscure incantations that someone decided 'made sense' to perform a simple action. Kind of like UNIX-->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Dolly" Language="1033" Version="0.1.0.0" Manufacturer="Willem" UpgradeCode="63a9a2d7-0a8b-46da-8887-f15d1f82b266">
+	<Product Id="*" Name="Dolly" Language="1033" Version="1.2.0.0" Manufacturer="Willem" UpgradeCode="63a9a2d7-0a8b-46da-8887-f15d1f82b266">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate />
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="no" />
+		<MediaTemplate EmbedCab="yes" />
     <Icon Id="icon.ico" SourceFile="$(var.Dolly.TargetDir)/dolly.ico"/>
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
     <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY"/>
@@ -20,7 +21,6 @@
             Value="WelcomeDlg"
             Order="2">1</Publish>
     </UI>
-    
 		<Feature Id="ProductFeature" Title="DeliveryInstaller" Level="1">
       <ComponentRef Id="Dolly"/>
       <ComponentRef Id="FSharpDll"/>
