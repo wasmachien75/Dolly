@@ -23,5 +23,5 @@ let CreateMessageTest () =
 [<Test>]
 let PushMessageTest () =
     let message = createMessage "a" "b" "c"
-    let result = (pushMessageAsync_test message).Result
+    let result = (pushMessageAsync_test message) |> Async.RunSynchronously
     Assert.AreEqual(200, result.StatusCode |> int)

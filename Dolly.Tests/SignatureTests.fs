@@ -5,7 +5,7 @@ open System.Xml.Linq
 open System.IO
 open NUnit.Framework
 
-let testFolder = "testDir" 
+let testFolder = Path.Combine(Path.GetTempPath(), "testFolder") 
 
 [<SetUp>]
 let writeGit () =
@@ -42,6 +42,13 @@ let SignatureContentTest () =
     let str = signature.FullString
     (str.Contains("abc") && str.Contains("def") && str.Contains(now.ToString("yyyy-MM-dd")) && str.Contains(nowPlus1Hour.ToString("yyyy-MM-dd")))
     |> Assert.True
+
+[<Test>]
+let HashAndTimestampTest () = 
+    let (hash, timestamp) = getLastHashAndTimestamp testFolder
+    hash.Length = 7 |> Assert.True
+    timestamp |> System.DateTime.Parse |> ignore
+    
 
 [<Test>]
 let AddCommentTest () =

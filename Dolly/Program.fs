@@ -12,23 +12,22 @@ let pushMessageAsync msg = pushMessageAsyncWithEndPoint msg endpointTeams
 let getReportName (folder: string) = 
     folder.Split(System.IO.Path.DirectorySeparatorChar) |> Seq.last
 
+let sendMessage reportName hash = 
+    createMessage "Report delivery" reportName hash 
+    |> pushMessageAsync 
+    |> Async.RunSynchronously 
+    |> handleResult
 
 let deliver from _to =
     let reportName = getReportName from
     let signature = createSignature from
     sprintf "Cloning report '%s'" reportName |> logInfo
     getCommitLog from |> logInfo
-    "Generated signature: " + signature.FullString |> logInfo
     let reportDef = copyFolderTo from _to |> findReportDefinitions
     "Found report definition at: " + reportDef |> logInfo
-    let docWithSignature = getDocumentWithSignature reportDef signature
-    logInfo "Appending signature..."
-    writeDocument reportDef docWithSignature
-    let res = createMessage "Report delivery" reportName signature.LastGitHash |> pushMessageAsync 
-    match res.Result.StatusCode |> int with
-    | 200 -> "Sent acknowledgement to Teams" |> logInfo
-    | i -> (sprintf "Could not send message to Teams (status code %d)" i) |> logInfo
-
+    addSignatureToDocAndWrite reportDef signature
+    sendMessage reportName signature.LastGitHash
+    
 let openInExplorerAndQuit (folder : string) = 
     System.Diagnostics.Process.Start (folder) |> ignore
     exit(0)

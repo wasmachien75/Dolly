@@ -9,8 +9,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="config.xml" />
-    <Compile Include="Push.fs" />
     <Compile Include="Logger.fs" />
+    <Compile Include="Push.fs" />
     <Compile Include="FolderMapping.fs" />
     <Compile Include="Config.fs" />
     <Compile Include="Delivery.fs">

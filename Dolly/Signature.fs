@@ -3,6 +3,8 @@
 open System.Diagnostics
 open System
 open System.Xml.Linq
+open Dolly.Logging
+open Dolly.Actions
 
 type Signature = {Timestamp: DateTime; Hash: string; GitTimestamp: DateTime; LastGitHash: string} with
 //"release=2018-01-01T12:00:00+02:00 | current git hash=d28b83a3 | last commit=2017-01-01T13:02:02+02:00 | last commit hash=6ba0231d
@@ -37,12 +39,16 @@ let getLastHashAndTimestamp (folder: string) =
 
 let getCurrentCommitHash (folder: string) = 
     getShellOutput "git rev-parse --short HEAD" folder
-    
+
 let createSignature folder = 
     let currHash = folder |> getCurrentCommitHash
     let (lastHash, lastTimestamp) = getLastHashAndTimestamp folder
-    {Timestamp=DateTime.Now; Hash=currHash; LastGitHash=lastHash; GitTimestamp=DateTime.Parse(lastTimestamp)}
+    let s = {Timestamp=DateTime.Now; Hash=currHash; LastGitHash=lastHash; GitTimestamp=DateTime.Parse(lastTimestamp)}
+    "Generated signature: " + s.FullString |> logInfo
+    s
 
 let addCommentToDocument (comment: string) (doc: XDocument) = new XDocument(doc.Root, new XComment(comment))
 
 let getDocumentWithSignature (path: string) (signature : Signature) = path |> XDocument.Load |> addCommentToDocument signature.FullString
+
+let addSignatureToDocAndWrite path = getDocumentWithSignature path >> writeDocument path
