@@ -5,7 +5,7 @@
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="no" />
 		<MediaTemplate EmbedCab="yes" />
-    <Icon Id="icon.ico" SourceFile="$(var.Dolly.TargetDir)/dolly.ico"/>
+    <Icon Id="icon.ico" SourceFile="$(var.Dolly.ProjectDir)dolly.ico"/>
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
     <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONROOTDIRECTORY"/>
     <UI>
