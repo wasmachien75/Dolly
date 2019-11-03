@@ -63,7 +63,7 @@
         <File Source="$(var.Dolly.ProjectDir)/config.xml" KeyPath="yes"/>
       </Component>
       <Component Id="Registry">
-        <RegistryKey Root="HKCR" Key="Directory\Background\shell\Dolly" Action="createAndRemoveOnUninstall">
+        <RegistryKey Root="HKCR" Key="Directory\Background\shell\Dolly">
           <RegistryValue Value="Deliver with Dolly..." Type="string"/>
           <RegistryValue Name="Icon" Value="[APPLICATIONROOTDIRECTORY]Dolly.exe" Type="string"/>
           <RegistryKey Key="command">
