@@ -33,8 +33,23 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'Installer\bin\Release'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
 - task: DownloadBuildArtifacts@0
   inputs:
     buildType: 'current'
-    downloadType: 'specific'
+    artifactName: 'drop'
+    itemPattern: '**/*.msi'
+    downloadType: 'single'
     downloadPath: '$(System.ArtifactsDirectory)'
+
+- task: DownloadPipelineArtifact@2
+  inputs:
+    buildType: 'current'
+    artifactName: 'drop'
+    itemPattern: '**/*.msi'
+    targetPath: '$(Pipeline.Workspace)'
