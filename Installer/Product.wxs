@@ -65,6 +65,7 @@
       <Component Id="Registry">
         <RegistryKey Root="HKCR" Key="Directory\Background\shell\Dolly" Action="createAndRemoveOnUninstall">
           <RegistryValue Value="Deliver with Dolly..." Type="string"/>
+          <RegistryValue Name="Icon" Value="[APPLICATIONROOTDIRECTORY]Dolly.exe" Type="string"/>
           <RegistryKey Key="command">
             <RegistryValue Value="[APPLICATIONROOTDIRECTORY]Dolly.exe &quot;%V&quot;" Type="string"/>
           </RegistryKey>
